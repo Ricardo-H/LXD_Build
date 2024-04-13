@@ -168,20 +168,25 @@ LXD可以重新配置隶属于系统下的完整子系统容器，通过给容�
    sudo fdisk -l
    ```
 
-假设设备是`/dev/sda`，如果未正确分区，那么使用如下命令对设备分区
-   ```bash
-   sodu fdisk /dev/sda
-   ```
+-	假设设备是`/dev/sda1`，如果未正确分区，那么使用如下命令对设备分区
+	   ```bash
+	   sodu fdisk /dev/sda1
+	   ```
+	
+	输入m查看帮助信息，一般要对照帮助进行操作，避免出错；输入n新建分区；输入分区号1，然后输入大小,默认是一个分区，全部的空间大小；然后查看要创建的分区表，这时还没有创建，按w保存退出后才成功。可以再次执行 
+	   ```bash
+	   sudo fdisk -l
+	   ```
+	
+	查看是否创建。将新分区格式化为ext4
+	   ```bash
+	   sudo mkfs -t ext4 /dev/sda1
+	   ```
 
-输入m查看帮助信息，一般要对照帮助进行操作，避免出错；输入n新建分区；输入分区号1，然后输入大小,默认是一个分区，全部的空间大小；然后查看要创建的分区表，这时还没有创建，按w保存退出后才成功。可以再次执行 
-   ```bash
-   sudo fdisk -l
-   ```
-
-查看是否创建。将新分区格式化为ext4
-   ```bash
-   sudo mkfs -t ext4 /dev/sda1
-   ```
+-	假设设备`/dev/sda1`，已经正确分区，那么我们需要先获取并保存它的`UUID`以及`TYPE`
+--	```bash
+	blkid /dev/sda1
+ 	```
 
 假设等待挂载的分区是`/dev/sda1`。临时挂载命令是 
    ```bash
@@ -189,13 +194,13 @@ LXD可以重新配置隶属于系统下的完整子系统容器，通过给容�
    ```
 稳定的挂载是
    ```bash
-   sudo blkid #check partition UUID, if the UUID=94A44F91A44F74B0
+   sudo blkid 		#check partition UUID and TYPE, if the UUID="94A44F91A44F74B0", TYPE="ext4"
    sudo vim /etc/fstab
    ```
 
 添加如下 
    ```vi
-   UUID=94A44F91A44F74B0 /mnt/ssd ntfs defaults 0 1
+   UUID=94A44F91A44F74B0 /mnt/ssd ext4 defaults 0 1
    ```
 ####  4.3.2. <a name='-1'></a> 服务器网络硬盘挂载
 VIP研究室的网络存储NAS开启了Samba分享功能，可以共享给局域网中的其他计算机使用。本节只简单介绍如何将NAS挂载到Ubuntu系统中，涉及到的具体权限问题，我们将在后面的章节介绍。我们通过修改`/etc/fstab`完成开机自动挂载。
