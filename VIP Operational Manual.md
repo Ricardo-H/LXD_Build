@@ -138,7 +138,7 @@ LXD可以重新配置隶属于系统下的完整子系统容器，通过给容�
 
       sudo apt-get upgrade
 
-      sudo apt-get dist--upgrade
+      sudo apt-get dist-upgrade
 
       sudo apt-get autoremove
       ```
